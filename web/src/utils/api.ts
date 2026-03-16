@@ -1,6 +1,11 @@
 import axios from 'axios';
 
-const API_BASE_URL = (import.meta.env.VITE_API_URL as string | undefined) || '/api';
+// Use VITE_API_URL in production, fallback to '/api' (proxy) locally.
+// If VITE_API_URL is provided without '/api' at the end, append it.
+let API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+if (API_BASE_URL !== '/api' && !API_BASE_URL.endsWith('/api')) {
+  API_BASE_URL += '/api';
+}
 
 const api = axios.create({
   baseURL: API_BASE_URL,
