@@ -19,4 +19,12 @@ export default defineConfig({
       },
     },
   },
+  vercel: {
+    rewrites: [
+      {
+        source: '/(.*)',
+        destination: '/',
+      },
+    ],
+  },
 });
