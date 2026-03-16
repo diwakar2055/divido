@@ -127,24 +127,33 @@ const startServer = async () => {
   await connectDB();
 
   app.listen(PORT, () => {
-    // Detect local network IP
-    const interfaces = os.networkInterfaces();
-    let networkIp = 'localhost';
-    for (const name of Object.keys(interfaces)) {
-      const iface = interfaces[name];
-      if (iface) {
-        for (const entry of iface) {
-          if (entry.family === 'IPv4' && !entry.internal) {
-            networkIp = entry.address;
+    const externalUrl = process.env.RENDER_EXTERNAL_URL;
+
+    if (externalUrl) {
+      // Production (Render)
+      console.log(`🚀 Server running at ${externalUrl}`);
+      console.log(`📝 API available at ${externalUrl}/api`);
+      console.log(`💚 Health check: ${externalUrl}/health`);
+    } else {
+      // Local development
+      const interfaces = os.networkInterfaces();
+      let networkIp = 'localhost';
+      for (const name of Object.keys(interfaces)) {
+        const iface = interfaces[name];
+        if (iface) {
+          for (const entry of iface) {
+            if (entry.family === 'IPv4' && !entry.internal) {
+              networkIp = entry.address;
+            }
           }
         }
       }
-    }
 
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
-    console.log(`📡 Network URL: http://${networkIp}:${PORT}`);
-    console.log(`📝 API available at http://localhost:${PORT}/api`);
-    console.log(`💚 Health check: http://localhost:${PORT}/health`);
+      console.log(`🚀 Server running on http://localhost:${PORT}`);
+      console.log(`📡 Network URL: http://${networkIp}:${PORT}`);
+      console.log(`📝 API available at http://localhost:${PORT}/api`);
+      console.log(`💚 Health check: http://localhost:${PORT}/health`);
+    }
   });
 };
 
