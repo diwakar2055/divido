@@ -10,9 +10,6 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-console.log('[Email Config] USER:', process.env.EMAIL_USER);
-console.log('[Email Config] PASSWORD:', process.env.EMAIL_PASSWORD);
-
 export const sendInvitationEmail = async (
   email: string,
   groupName: string,
@@ -69,7 +66,6 @@ export const sendInvitationEmail = async (
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log(`Invitation email sent to ${email}`);
   } catch (error) {
     console.error('Failed to send invitation email:', error);
     throw new Error('Failed to send invitation email');
@@ -114,7 +110,6 @@ export const sendWelcomeEmail = async (
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log(`Welcome email sent to ${email}`);
   } catch (error) {
     console.error('Failed to send welcome email:', error);
   }

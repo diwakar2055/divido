@@ -188,22 +188,11 @@ export const searchUsers = async (req: AuthRequest, res: Response) => {
       return res.status(400).json({ message: 'Email is required' });
     }
 
-    console.log('[searchUsers] Searching for email:', email, 'Current user:', req.userId);
-
     // Search for exact match first, then regex match
-    let users = await User.find({
+    const users = await User.find({
       email: { $regex: email, $options: 'i' },
       _id: { $ne: req.userId }, // Exclude current user
     }).select('_id name email').limit(10);
-
-    console.log('[searchUsers] Found users:', users);
-    console.log('[searchUsers] Total users count:', users.length);
-
-    // If no results, try to get all users for debugging
-    if (users.length === 0) {
-      const allUsers = await User.find().select('_id name email').limit(5);
-      console.log('[searchUsers] Debug - All users in DB (first 5):', allUsers);
-    }
 
     res.status(200).json({ users });
   } catch (error: any) {
